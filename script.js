@@ -62,7 +62,7 @@ function findMatches(query) {
 // Заявки йдуть не напряму в Telegram, а через Cloudflare Worker —
 // це приховує токен бота від коду сайту. Вставте сюди адресу
 // свого Worker'а (див. інструкцію, яку я надав окремо).
-const WORKER_URL = "ВАШ_WORKER_URL"; // напр. https://my-form.username.workers.dev
+const WORKER_URL = "https://telegram-form-proxy.boris-pavlenko-92.workers.dev";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contactForm");
