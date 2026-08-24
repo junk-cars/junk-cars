@@ -60,11 +60,61 @@ function findMatches(query) {
 
 // ==== Налаштування відправки заявок у Telegram ====
 // Заявки йдуть не напряму в Telegram, а через Cloudflare Worker —
-// це приховує токен бота від коду сайту. Вставте сюди адресу
-// свого Worker'а (див. інструкцію, яку я надав окремо).
+// це приховує токен бота від коду сайту.
 const WORKER_URL = "https://telegram-form-proxy.boris-pavlenko-92.workers.dev";
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  // ---- Пошук деталей із випадаючим списком ----
+  const input = document.getElementById("partSearch");
+  const dropdown = document.getElementById("searchResults");
+
+  if (input && dropdown) {
+    function renderDropdown(matches) {
+      dropdown.innerHTML = "";
+      if (matches.length === 0) {
+        dropdown.classList.remove("open");
+        return;
+      }
+      matches.forEach(part => {
+        const item = document.createElement("div");
+        item.className = "search-result-item";
+        item.textContent = part.name;
+        item.addEventListener("click", () => {
+          window.location.href = part.url;
+        });
+        dropdown.appendChild(item);
+      });
+      dropdown.classList.add("open");
+    }
+
+    input.addEventListener("input", () => {
+      renderDropdown(findMatches(input.value));
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const matches = findMatches(input.value);
+        if (matches.length > 0) {
+          window.location.href = matches[0].url;
+        }
+      } else if (e.key === "Escape") {
+        dropdown.classList.remove("open");
+      }
+    });
+
+    input.addEventListener("focus", () => {
+      if (input.value.trim()) renderDropdown(findMatches(input.value));
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!dropdown.contains(e.target) && e.target !== input) {
+        dropdown.classList.remove("open");
+      }
+    });
+  }
+
+  // ---- Відправка заявки в Telegram ----
   const form = document.getElementById("contactForm");
   const modal = document.getElementById("successModal");
   const modalCloseBtn = document.getElementById("modalCloseBtn");
@@ -80,92 +130,45 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  if (!form) return;
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+      const name = document.getElementById("fieldName").value.trim();
+      const phone = document.getElementById("fieldPhone").value.trim();
+      const vin = document.getElementById("fieldVin").value.trim();
+      const part = document.getElementById("fieldPart").value.trim();
 
-    const name = document.getElementById("fieldName").value.trim();
-    const phone = document.getElementById("fieldPhone").value.trim();
-    const vin = document.getElementById("fieldVin").value.trim();
-    const part = document.getElementById("fieldPart").value.trim();
+      const text =
+        "Нова заявка з сайту Chevrolet Bolt Parts:\n" +
+        "Ім'я: " + (name || "-") + "\n" +
+        "Телефон: " + (phone || "-") + "\n" +
+        "VIN-код: " + (vin || "-") + "\n" +
+        "Деталь: " + (part || "-");
 
-    const text =
-      "Нова заявка з сайту Chevrolet Bolt Parts:\n" +
-      "Ім'я: " + (name || "-") + "\n" +
-      "Телефон: " + (phone || "-") + "\n" +
-      "VIN-код: " + (vin || "-") + "\n" +
-      "Деталь: " + (part || "-");
+      const submitBtn = form.querySelector("button[type=submit]");
+      submitBtn.disabled = true;
 
-    const submitBtn = form.querySelector("button[type=submit]");
-    submitBtn.disabled = true;
+      try {
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text })
+        });
 
-    try {
-      const response = await fetch(WORKER_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text })
-      });
+        const result = await response.json();
 
-      const result = await response.json();
-
-      if (response.ok && result.ok) {
-        form.reset();
-        modal.classList.add("open");
-      } else {
-        alert("Не вдалося надіслати заявку. Спробуйте, будь ласка, ще раз або напишіть нам у Telegram.");
+        if (response.ok && result.ok) {
+          form.reset();
+          modal.classList.add("open");
+        } else {
+          alert("Не вдалося надіслати заявку. Спробуйте, будь ласка, ще раз або напишіть нам у Telegram.");
+        }
+      } catch (err) {
+        alert("Не вдалося надіслати заявку. Перевірте з'єднання з інтернетом і спробуйте ще раз.");
+      } finally {
+        submitBtn.disabled = false;
       }
-    } catch (err) {
-      alert("Не вдалося надіслати заявку. Перевірте з'єднання з інтернетом і спробуйте ще раз.");
-    } finally {
-      submitBtn.disabled = false;
-    }
-  });
-});
-
-  const dropdown = document.getElementById("searchResults");
-  if (!input || !dropdown) return;
-
-  function renderDropdown(matches) {
-    dropdown.innerHTML = "";
-    if (matches.length === 0) {
-      dropdown.classList.remove("open");
-      return;
-    }
-    matches.forEach(part => {
-      const item = document.createElement("div");
-      item.className = "search-result-item";
-      item.textContent = part.name;
-      item.addEventListener("click", () => {
-        window.location.href = part.url;
-      });
-      dropdown.appendChild(item);
     });
-    dropdown.classList.add("open");
   }
-
-  input.addEventListener("input", () => {
-    renderDropdown(findMatches(input.value));
-  });
-
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      const matches = findMatches(input.value);
-      if (matches.length > 0) {
-        window.location.href = matches[0].url;
-      }
-    } else if (e.key === "Escape") {
-      dropdown.classList.remove("open");
-    }
-  });
-
-  input.addEventListener("focus", () => {
-    if (input.value.trim()) renderDropdown(findMatches(input.value));
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!dropdown.contains(e.target) && e.target !== input) {
-      dropdown.classList.remove("open");
-    }
-  });
 });
