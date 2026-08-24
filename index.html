@@ -29,7 +29,10 @@
 
 <section id="catalog">
 <h2>Каталог</h2>
-<input class="search" type="text" placeholder="введіть назву деталі">
+<div class="search-wrapper">
+<input class="search" type="text" id="partSearch" placeholder="введіть назву деталі" autocomplete="off">
+<div class="search-results" id="searchResults"></div>
+</div>
 <div class="cards">
 <a class="card" href="battery.html"><h3>Високовольтна батарея</h3></a>
 <a class="card" href="doors.html"><h3>Двері та крила</h3></a>
@@ -43,14 +46,15 @@
 <section id="gallery">
 <h2>Галерея</h2>
 <div class="gallery">
-<img src="car1.jpg" alt="Chevrolet Bolt — фото 1">
-<img src="car2.jpg" alt="Chevrolet Bolt — фото 2">
-<img src="car3.jpg" alt="Chevrolet Bolt — фото 3">
+<img src="car1.jpg" alt="Chevrolet Bolt — фото 1" loading="lazy">
+<img src="car2.jpg" alt="Chevrolet Bolt — фото 2" loading="lazy">
+<img src="car3.jpg" alt="Chevrolet Bolt — фото 3" loading="lazy">
 </div>
 </section>
 
 <section id="contacts">
 <h2>зв'язатися з нами </h2>
+<p class="contact-info">Телефон: <a href="tel:+380663289912">+380 66 328 99 12</a></p>
 <form>
 <input type="text" placeholder="Ваше ім'я">
 <input type="text" placeholder="Телефон">
@@ -60,7 +64,9 @@
 </form>
 </section>
 
-<a href="#" class="telegram">Telegram</a>
+<a href="https://t.me/Slavkaw" class="telegram" target="_blank" rel="noopener">Telegram</a>
 <footer><p>© 2026 Chevrolet Bolt Parts</p></footer>
+
+<script src="script.js"></script>
 </body>
 </html>

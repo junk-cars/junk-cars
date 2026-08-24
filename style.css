@@ -1,35 +1,88 @@
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#f5f5f5;color:#222;line-height:1.5}
+html{-webkit-text-size-adjust:100%}
+body{font-family:Arial,sans-serif;background:#f5f5f5;color:#222;line-height:1.5;overflow-x:hidden}
+img{max-width:100%;height:auto;display:block}
+
 header{background:#111;color:#fff;padding:20px 10%;position:sticky;top:0;z-index:10}
-nav{display:flex;justify-content:space-between;align-items:center;gap:20px}
+nav{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
 .logo{font-size:24px;font-weight:bold}
-.menu a{color:#fff;text-decoration:none;margin-left:20px}
+.menu{display:flex;flex-wrap:wrap}
+.menu a{color:#fff;text-decoration:none;margin-left:20px;padding:4px 0}
+
 .hero{background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7)),url("bolt.jpg");background-size:cover;background-position:center;color:#fff;text-align:center;padding:120px 20px}
 .hero h1{font-size:48px;margin-bottom:15px}
 .hero p{font-size:20px;margin-bottom:25px}
 .button{display:inline-block;background:#3a3a3a;color:#fff;padding:15px 25px;border-radius:8px;text-decoration:none;transition:background .2s}
 .button:hover{background:#242424}
+
 section{padding:60px 10%}
 section h2{margin-bottom:20px}
+
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
 .card{background:#3a3a3a;color:#fff;padding:25px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);text-decoration:none;display:block;text-align:center;transition:background .2s}
 .card:hover{background:#242424}
 .card h3{color:#fff}
-.search{width:100%;padding:15px;border-radius:8px;border:1px solid #ccc;margin-bottom:20px}
+
+/* Пошук деталей із випадаючим списком */
+.search-wrapper{position:relative;margin-bottom:20px}
+.search{width:100%;padding:15px;border-radius:8px;border:1px solid #ccc;font:inherit}
+.search-results{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid #ccc;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.12);max-height:260px;overflow-y:auto;z-index:15}
+.search-results.open{display:block}
+.search-result-item{padding:14px 15px;cursor:pointer;border-bottom:1px solid #eee}
+.search-result-item:last-child{border-bottom:none}
+.search-result-item:hover,.search-result-item:active{background:#f0f0f0}
+
 .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
 .gallery img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:10px}
+
 form input,form textarea{width:100%;margin-bottom:15px;padding:15px;border-radius:8px;border:1px solid #ccc;font:inherit}
 .contact-info{font-size:18px;margin-bottom:20px}
 .contact-info a{color:#3a3a3a;font-weight:bold;text-decoration:none}
 form textarea{min-height:130px;resize:vertical}
-form button{background:#3a3a3a;color:#fff;border:none;padding:15px 30px;border-radius:8px;cursor:pointer;transition:background .2s}
+form button{background:#3a3a3a;color:#fff;border:none;padding:15px 30px;border-radius:8px;cursor:pointer;transition:background .2s;width:100%}
 form button:hover{background:#242424}
-.telegram{position:fixed;right:20px;bottom:20px;background:#0088cc;color:#fff;padding:15px 20px;border-radius:50px;text-decoration:none;z-index:20}
+
+.telegram{position:fixed;right:20px;bottom:20px;background:#0088cc;color:#fff;padding:15px 20px;border-radius:50px;text-decoration:none;z-index:20;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+
 footer{background:#111;color:#fff;text-align:center;padding:30px}
+
 .part-page{max-width:900px;margin:0 auto;padding:40px 5% 60px}
 .part-page h1{font-size:32px;margin-bottom:20px}
 .part-page img{width:100%;max-width:100%;height:auto;border-radius:10px;display:block;margin-bottom:20px}
 .part-page p{font-size:17px}
+.price{font-size:22px;font-weight:bold;margin-top:10px}
+.price-value{color:#3a3a3a}
 .back-link{display:inline-block;margin-bottom:20px;color:#3a3a3a;text-decoration:none;font-weight:bold}
-@media(max-width:700px){.part-page{padding:25px 5% 40px}.part-page h1{font-size:24px}.part-page p{font-size:15px}}
-@media(max-width:700px){header{padding:15px 5%}nav{flex-direction:column;align-items:flex-start}.menu{display:flex;flex-wrap:wrap;gap:10px}.menu a{margin-left:0}.hero{padding:80px 20px}.hero h1{font-size:34px}section{padding:45px 5%}}
+
+/* Планшети та невеликі ноутбуки */
+@media(max-width:900px){
+  section{padding:45px 6%}
+  .hero{padding:90px 20px}
+}
+
+/* Телефони */
+@media(max-width:700px){
+  header{padding:15px 5%}
+  nav{flex-direction:column;align-items:flex-start;gap:10px}
+  .menu{gap:14px}
+  .menu a{margin-left:0}
+  .hero{padding:70px 16px}
+  .hero h1{font-size:30px}
+  .hero p{font-size:16px}
+  .button{width:100%;text-align:center;padding:14px 20px}
+  section{padding:35px 5%}
+  section h2{font-size:22px}
+  .cards{grid-template-columns:1fr;gap:14px}
+  .gallery{grid-template-columns:1fr}
+  .telegram{right:14px;bottom:14px;padding:12px 16px;font-size:14px}
+  .part-page{padding:25px 5% 40px}
+  .part-page h1{font-size:22px}
+  .part-page p{font-size:15px}
+  form button{padding:14px 20px}
+}
+
+/* Дуже маленькі екрани */
+@media(max-width:380px){
+  .hero h1{font-size:24px}
+  .logo{font-size:19px}
+}
