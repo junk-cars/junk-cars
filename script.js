@@ -58,8 +58,71 @@ function findMatches(query) {
   return results;
 }
 
+// ==== Налаштування відправки заявок у Telegram ====
+// Заявки йдуть не напряму в Telegram, а через Cloudflare Worker —
+// це приховує токен бота від коду сайту. Вставте сюди адресу
+// свого Worker'а (див. інструкцію, яку я надав окремо).
+const WORKER_URL = "ВАШ_WORKER_URL"; // напр. https://my-form.username.workers.dev
+
 document.addEventListener("DOMContentLoaded", () => {
-  const input = document.getElementById("partSearch");
+  const form = document.getElementById("contactForm");
+  const modal = document.getElementById("successModal");
+  const modalCloseBtn = document.getElementById("modalCloseBtn");
+
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener("click", () => {
+      modal.classList.remove("open");
+    });
+  }
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.classList.remove("open");
+    });
+  }
+
+  if (!form) return;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("fieldName").value.trim();
+    const phone = document.getElementById("fieldPhone").value.trim();
+    const vin = document.getElementById("fieldVin").value.trim();
+    const part = document.getElementById("fieldPart").value.trim();
+
+    const text =
+      "Нова заявка з сайту Chevrolet Bolt Parts:\n" +
+      "Ім'я: " + (name || "-") + "\n" +
+      "Телефон: " + (phone || "-") + "\n" +
+      "VIN-код: " + (vin || "-") + "\n" +
+      "Деталь: " + (part || "-");
+
+    const submitBtn = form.querySelector("button[type=submit]");
+    submitBtn.disabled = true;
+
+    try {
+      const response = await fetch(WORKER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.ok) {
+        form.reset();
+        modal.classList.add("open");
+      } else {
+        alert("Не вдалося надіслати заявку. Спробуйте, будь ласка, ще раз або напишіть нам у Telegram.");
+      }
+    } catch (err) {
+      alert("Не вдалося надіслати заявку. Перевірте з'єднання з інтернетом і спробуйте ще раз.");
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+});
+
   const dropdown = document.getElementById("searchResults");
   if (!input || !dropdown) return;
 

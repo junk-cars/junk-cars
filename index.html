@@ -55,17 +55,24 @@
 <section id="contacts">
 <h2>зв'язатися з нами </h2>
 <p class="contact-info">Телефон: <a href="tel:+380663289912">+380 66 328 99 12</a></p>
-<form>
-<input type="text" placeholder="Ваше ім'я">
-<input type="text" placeholder="Телефон">
-<input type="text" placeholder="VIN-код">
-<textarea placeholder="Яка деталь потрібна?"></textarea>
+<form id="contactForm">
+<input type="text" id="fieldName" placeholder="Ваше ім'я">
+<input type="text" id="fieldPhone" placeholder="Телефон">
+<input type="text" id="fieldVin" placeholder="VIN-код">
+<textarea id="fieldPart" placeholder="Яка деталь потрібна?"></textarea>
 <button type="submit">Надіслати заявку</button>
 </form>
 </section>
 
 <a href="https://t.me/Slavkaw" class="telegram" target="_blank" rel="noopener">Telegram</a>
 <footer><p>© 2026 Chevrolet Bolt Parts</p></footer>
+
+<div class="modal-overlay" id="successModal">
+<div class="modal-box">
+<p>Заявка відправлена, ми зв'яжемось з вами найближчим часом.</p>
+<button type="button" class="modal-close" id="modalCloseBtn">Закрити</button>
+</div>
+</div>
 
 <script src="script.js"></script>
 </body>
