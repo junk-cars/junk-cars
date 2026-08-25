@@ -9,9 +9,9 @@ nav{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-
 .menu{display:flex;flex-wrap:wrap}
 .menu a{color:#fff;text-decoration:none;margin-left:20px;padding:4px 0}
 
-.hero{background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7)),url("bolt.jpg");background-size:cover;background-position:center;color:#fff;text-align:center;padding:120px 20px}
-.hero h1{font-size:48px;margin-bottom:15px}
-.hero p{font-size:20px;margin-bottom:25px}
+.hero{background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7)),url("bolt.jpg");background-size:cover;background-position:center;color:#fff;text-align:center;padding:50px 20px;min-height:420px;display:flex;flex-direction:column;align-items:center}
+.hero h1{margin:0;font-size:48px}
+.hero p{margin-top:auto;margin-bottom:25px;font-size:20px}
 .button{display:inline-block;background:#3a3a3a;color:#fff;padding:15px 25px;border-radius:8px;text-decoration:none;transition:background .2s}
 .button:hover{background:#242424}
 
