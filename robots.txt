@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://junk-cars.github.io/junk-cars/sitemap.xml
